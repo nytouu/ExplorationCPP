@@ -1,39 +1,57 @@
 #include <iostream>
+#include "Location.cpp"
 
 using namespace std;
 
-string choix_lieu();
 
+// Variables
+int stamina = 100;
+Location *visited[] = {};
+
+
+// Functions
+Location *locationChoice(Location *first, Location *second);
+
+
+// Declaration
 int
 main()
 {
-    string result = choix_lieu();
 
-    if (result == "Error")
+    Location *place1 = new Location("Entrance", "the entrance", 10);
+    Location *place2 = new Location("Hall", "the hall", 20);
+    Location *place3 = new Location("Kitchen", "the kitchen", 30);
+
+    visited[0] = place1;
+
+    Location *result = locationChoice(place2, place3);
+
+    if (result == 0)
         return 1;
     else
         return 0;
 }
 
-string
-choix_lieu()
+Location
+*locationChoice(Location *first, Location *second)
 {
-    string choix;
+    string choice;
 
-    cout << "Choisissez un chemin: \"Gauche\" ou \"Droite\": " << endl;
-    cin >> choix;
+    cout << "Choisissez un chemin: \"" << first->getName() <<  "\" ou \"" << second->getName() << "\" :" << endl;
+    cin >> choice;
 
-    switch (tolower(choix[0]))
+    if (choice == first->getName())
     {
-        case 'g':
-            cout << "Vous avez choisi le passage à gauche !" << endl;
-            return "gauche";
-        case 'd':
-            cout << "Vous avez choisi le passage à droite !" << endl;
-            return "droite";
-        default:
-            cout << "Choix invalide" << endl;
-            return "Erreur";
+        stamina -= first->getDifficulty();
+        visited[1] = first;
+        return first;
     }
-
+    else if (choice == second->getName())
+    {
+        stamina -= second->getDifficulty();
+        visited[1] = second;
+        return second;
+    }
+    else
+        return 0;
 }
