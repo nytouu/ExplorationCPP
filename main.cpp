@@ -5,25 +5,26 @@ using namespace std;
 
 
 // Variables
-int stamina = 20;
+int stamina = 25;
 Location *visited[] = {};
 
 
 // Functions
 Location *locationChoice(Location *first, Location *second);
 int goCamping(Location *where);
+void restStamina();
 
 
 // Declaration
 int
 main()
 {
-
     Location *place1 = new Location("Entrance", "the entrance", 10);
     Location *place2 = new Location("Hall", "the hall", 20);
     Location *place3 = new Location("Kitchen", "the kitchen", 30);
 
     visited[0] = place1;
+    place2->setRestingLocation(true);
 
     cout << "Stamina : " << stamina << endl;
 
@@ -45,7 +46,7 @@ Location
     int restValue = 0;
     Location *selected;
 
-    cout << "Choisissez un chemin: \"" << first->getName() <<  "\" ou \"" << second->getName() << "\" :" << endl;
+    cout << "Where ?: \"" << first->getName() <<  "\" or \"" << second->getName() << "\" :" << endl;
     cin >> choice;
 
     if (choice == first->getName())
@@ -60,7 +61,8 @@ Location
     if (canCamping)
     {
         char camp;
-        cout << "Would you like to camp in " << selected->getName() << " : y/n" << endl;
+
+        cout << "Would you like to camp in the " << selected->getName() << " : y/n" << endl;
         cin >> camp;
 
         switch (camp)
@@ -76,6 +78,25 @@ Location
         }
     }
 
+    if (selected->isRestLocation())
+    {
+        char rest;
+
+        cout << "Would you like to rest in the " << selected->getName() << "?" << endl;
+        cin >> rest;
+
+        switch (rest)
+        {
+            case 'y':
+                restStamina();
+            case 'n':
+                cout << "okay okay" << endl;
+            default:
+                return 0;
+        }
+
+    }
+
     stamina -= selected->getDifficulty() - restValue;
     visited[1] = selected;
     return selected;
@@ -84,6 +105,17 @@ Location
 int
 goCamping(Location *where)
 {
-    cout << "You camped in " << where->getName() << ", you feel rested." << endl;
+    cout << "You camped in the " << where->getName() << ", you feel rested." << endl;
     return where->getDifficulty() / 2;
+}
+
+void
+restStamina()
+{
+    stamina += 50;
+
+    if (stamina > 100)
+        stamina = 100;
+
+    cout << "+50 Stamina, now at : " << stamina << endl;
 }

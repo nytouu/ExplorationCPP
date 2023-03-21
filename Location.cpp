@@ -27,6 +27,12 @@ Location::setDifficulty(int newDifficulty)
 	difficulty = newDifficulty;
 }
 
+void
+Location::setRestingLocation(bool newValue)
+{
+	restLocation = newValue;
+}
+
 std::string
 Location::getName()
 {
@@ -43,6 +49,12 @@ bool
 Location::getCamping()
 {
 	return camping;
+}
+
+bool
+Location::isRestLocation()
+{
+	return restLocation;
 }
 
 #endif
