@@ -1,10 +1,12 @@
 #include <iostream>
+#include <fstream>
 #include "Location.cpp"
 
 using namespace std;
 
 
 // Variables
+int turn = 0;
 int stamina = 25;
 Location *visited[] = {};
 
@@ -13,6 +15,7 @@ Location *visited[] = {};
 Location *locationChoice(Location *first, Location *second);
 int goCamping(Location *where);
 void restStamina();
+void saveData(string filename);
 
 
 // Declaration
@@ -23,7 +26,9 @@ main()
     Location *place2 = new Location("Hall", "the hall", 20);
     Location *place3 = new Location("Kitchen", "the kitchen", 30);
 
-    visited[0] = place1;
+    visited[turn] = place1;
+    turn++;
+
     place2->setRestingLocation(true);
 
     cout << "Stamina : " << stamina << endl;
@@ -35,7 +40,10 @@ main()
     if (result == 0)
         return 1;
     else
+    {
+        saveData("save_file.txt");
         return 0;
+    }
 }
 
 Location
@@ -89,16 +97,22 @@ Location
         {
             case 'y':
                 restStamina();
+                break;
             case 'n':
                 cout << "okay okay" << endl;
+                break;
             default:
                 return 0;
         }
 
     }
 
-    stamina -= selected->getDifficulty() - restValue;
-    visited[1] = selected;
+    if (!selected->isRestLocation())
+        stamina -= selected->getDifficulty() - restValue;
+
+    visited[turn] = selected;
+
+    turn++;
     return selected;
 }
 
@@ -118,4 +132,23 @@ restStamina()
         stamina = 100;
 
     cout << "+50 Stamina, now at : " << stamina << endl;
+}
+
+void
+saveData(string filename)
+{
+    ofstream saveFile(filename);
+
+    int visitLength = sizeof(*visited) / sizeof(visited[0]);
+    cout << visitLength << endl;
+
+    saveFile << ":begin:\n";
+    for (int i=0; i <= visitLength; i++)
+    {
+        saveFile << visited[i]->getName() << endl;
+    }
+    saveFile << ":end:\0" << endl;
+
+    saveFile.close();
+
 }
