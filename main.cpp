@@ -70,7 +70,7 @@ Location
     {
         char camp;
 
-        cout << "Would you like to camp in the " << selected->getName() << " : y/n" << endl;
+        cout << "Would you like to camp in the " << selected->getName() << "? : y/n" << endl;
         cin >> camp;
 
         switch (camp)
@@ -90,7 +90,7 @@ Location
     {
         char rest;
 
-        cout << "Would you like to rest in the " << selected->getName() << "?" << endl;
+        cout << "Would you like to rest in the " << selected->getName() << "? : y/n" << endl;
         cin >> rest;
 
         switch (rest)
