@@ -6,9 +6,10 @@ using namespace std;
 
 
 // Variables
+const int MAXTURNS = 5;
 int turn = 0;
 int stamina = 25;
-Location *visited[] = {};
+Location *visited[MAXTURNS];
 
 
 // Functions
@@ -33,17 +34,20 @@ main()
 
     cout << "Stamina : " << stamina << endl;
 
-    Location *result = locationChoice(place2, place3);
-
-    cout << "Stamina : " << stamina << endl;
-
-    if (result == 0)
-        return 1;
-    else
+    while (turn < MAXTURNS)
     {
-        saveData("save_file.txt");
-        return 0;
+        cout << "Turn :" << turn << endl;
+        Location *result = locationChoice(place2, place3);
+        if (result == 0)
+            return 1;
+
+        cout << "Stamina : " << stamina << endl;
+        visited[turn] = result;
+        turn++;
     }
+
+    saveData("save_file.txt");
+    return 0;
 }
 
 Location
@@ -104,15 +108,11 @@ Location
             default:
                 return 0;
         }
-
     }
 
     if (!selected->isRestLocation())
         stamina -= selected->getDifficulty() - restValue;
 
-    visited[turn] = selected;
-
-    turn++;
     return selected;
 }
 
@@ -139,11 +139,10 @@ saveData(string filename)
 {
     ofstream saveFile(filename);
 
-    int visitLength = sizeof(*visited) / sizeof(visited[0]);
-    cout << visitLength << endl;
+    int visitLength = sizeof(visited) / sizeof(visited[0]);
 
     saveFile << ":begin:\n";
-    for (int i=0; i <= visitLength; i++)
+    for (int i=0; i < visitLength; i++)
     {
         saveFile << visited[i]->getName() << endl;
     }
